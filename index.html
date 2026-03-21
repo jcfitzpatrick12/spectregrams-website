@@ -4,57 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Polyspectre</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="banner">
-    <div class="banner-content">
-      <img src="assets/spectre.png" alt="Polyspectre Logo" class="logo">
-      <h1>Polyspectre</h1>
+  <header>
+    <div class="header-left">
+      <img src="assets/spectre.png" alt="Polyspectre" class="logo">
+      <span class="brand">Polyspectre</span>
     </div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </nav>
   </header>
-  <main class="container">
-    <section class="hero">
-      <h2>A global network of low-cost, narrowband FFT spectrometers for solar radio observations.</h2>
+
+  <div class="info-banner">
+    This project is currently under active development.
+  </div>
+
+  <main>
+    <section id="about">
+      <h2>About us</h2>
+      <p>We're building Polyspectre: a global network of low-cost, narrowband FFT spectrometers for solar radio observations.</p>
+
+      <p>Each node uses an off-the-shelf software-defined radio and any Linux computer to observe a fraction of the total solar radio spectrum. Spectra produced by each node are timestamped and calibrated to solar flux units. 
+         These spectra are published and collated into a single broadband spectrogram per day. All nodes are coordinated by a central server, with the entire network easily reprogrammable at scale.</p>
+
+      <ul>
+        <li><strong>Consistent frontend:</strong> Every station uses identical components; the only difference is geography. The impact of local RFI is minimised through redundancy and geographic diversity of nodes. Local artefacts are averaged out.</li>
+        <li><strong>Calibrated data:</strong> The data produced by each station is calibrated to solar flux units, and so is easily comparable between stations and to other instruments outside the network.</li>
+        <li><strong>Consistent sampling:</strong> While each station may operate at a different centre frequency, the spectra they produce are emplaced on a common grid.</li>
+        <li><strong>One file:</strong> The data is easily consumable as a single file, per day.</li>
+      </ul>
+
+      <p>Powered by <a href="https://github.com/jcfitzpatrick12/spectre" target="_blank">Spectre</a>.</p>
     </section>
-    <section id="gallery" class="gallery-section">
-      <div class="spectrogram-carousel">
-        <button class="carousel-btn" id="prev-btn" aria-label="Previous spectrogram">&#8592;</button>
-        <div class="carousel-window">
-          <img src="assets/spectrogram_1.png" alt="Spectrogram 1" class="spectrogram-img" id="spectrogram-img">
+
+    <section id="gallery">
+      <div class="carousel-wrapper">
+        <div class="carousel" id="carousel">
+          <img src="assets/spectrogram_1.png" alt="Spectrogram 1">
+          <img src="assets/spectrogram_2.png" alt="Spectrogram 2">
+          <img src="assets/spectrogram_3.png" alt="Spectrogram 3">
+          <img src="assets/spectrogram_4.png" alt="Spectrogram 4">
         </div>
-        <button class="carousel-btn" id="next-btn" aria-label="Next spectrogram">&#8594;</button>
       </div>
+      <div class="carousel-dots" id="dots"></div>
+    </section>
+
+    <section id="blogs">
+      <h2>Blogs</h2>
+      <ul>
+        <li>
+          <a href="https://www.e-callisto.org/statusreports/status_103V01.pdf" target="_blank">CALLISTO status report/newsletter #103 (PDF)</a>
+        </li>
+      </ul>
+    </section>
+
+    <section id="contact">
+      <h2>Get Involved</h2>
+      <p>Want to learn more or get involved?</p>
+      <div class="center-btn"><a href="mailto:jimmy@polyspectre.org" class="btn">Contact Us</a></div>
     </section>
   </main>
-  <footer class="site-footer">
+
+  <footer>
+    <img src="assets/spectre.png" alt="Polyspectre" class="logo">
     <span>Contact: <a href="mailto:jimmy@polyspectre.org">jimmy@polyspectre.org</a></span>
+    <a href="https://github.com/jcfitzpatrick12/spectre" target="_blank" class="footer-github">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" class="github-icon">
+      GitHub
+    </a>
   </footer>
-  
-  
-  
+
   <script>
-    const images = [
-      'assets/spectrogram_1.png',
-      'assets/spectrogram_2.png',
-      'assets/spectrogram_3.png',
-      'assets/spectrogram_4.png'
-    ];
+    const carousel = document.getElementById('carousel');
+    const imgs = carousel.querySelectorAll('img');
+    const dots = document.getElementById('dots');
     let idx = 0;
-    const img = document.getElementById('spectrogram-img');
-    document.getElementById('prev-btn').onclick = () => {
-      idx = (idx - 1 + images.length) % images.length;
-      img.src = images[idx];
-      img.alt = `Spectrogram ${idx + 1}`;
-    };
-    document.getElementById('next-btn').onclick = () => {
-      idx = (idx + 1) % images.length;
-      img.src = images[idx];
-      img.alt = `Spectrogram ${idx + 1}`;
-    };
+    imgs.forEach((_, i) => {
+      const d = document.createElement('span');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => go(i);
+      dots.appendChild(d);
+    });
+    function go(i) {
+      idx = i;
+      carousel.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      dots.querySelectorAll('.dot').forEach((d, j) => d.classList.toggle('active', j === idx));
+    }
+    setInterval(() => go((idx + 1) % imgs.length), 4000);
   </script>
 </body>
 </html>
